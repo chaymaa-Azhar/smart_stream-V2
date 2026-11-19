@@ -27,3 +27,12 @@ export const updateChannel = (id, data) =>
 
 export const setFavorite = (id, value) =>
   updateChannel(id, { isFavorite: value });
+
+
+
+//delet
+export const setBlacklisted = (id, value) =>
+  updateChannel(id, { isBlacklisted: value });
+
+export const deleteChannel = (id) =>
+  request(`${API_URL}/${id}`, { method: "DELETE" });
