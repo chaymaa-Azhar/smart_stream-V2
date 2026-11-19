@@ -9,6 +9,10 @@ const searchInput = document.querySelector("#search-input");
 const categoryToggle = document.querySelector("#category-toggle");
 const categoryMenu = document.querySelector("#category-menu");
 const categoryLabel = document.querySelector("#category-label");
+const showAllBtn = document.querySelector("#show-all");
+const showFavBtn = document.querySelector("#show-favorites");
+
+let view = localStorage.getItem("view") || "all";
 
 let allchannels = [];
 let selectedCategory = "TOUS";
@@ -22,11 +26,13 @@ const showError = (message) => {
 };
 const hideError = () => errorBox.classList.add("hidden");
 
+
 const applyFilters = () => {
   const text = searchInput.value.trim().toLowerCase();
 
   const filtered = allchannels.filter((channel) => {
     const notBlacklisted = !channel.isBlacklisted;
+    const matchView = view === "all" || channel.isFavorite;
 
     const matchCategory =
       selectedCategory === "TOUS" || channel.category === selectedCategory;
@@ -35,11 +41,12 @@ const applyFilters = () => {
       channel.name.toLowerCase().includes(text) ||
       String(channel.channelNumber).includes(text);
 
-    return notBlacklisted && matchCategory && matchText;
+    return notBlacklisted && matchView && matchCategory && matchText;
   });
 
   afficher(filtered, toggleFavorite);
 };
+
 
 const toggleFavorite = async (id) => {
   const channel = allchannels.find((c) => c.id === id);
@@ -84,4 +91,27 @@ categoryMenu.querySelectorAll("button").forEach((button) => {
 });
 
 document.querySelector("#retry").addEventListener("click", init);
+
+
+
+
+//update
+const updateViewButtons = () => {
+  showAllBtn.classList.toggle("bg-gray-500", view === "all");
+  showAllBtn.classList.toggle("bg-gray-700", view !== "all");
+  showFavBtn.classList.toggle("bg-gray-500", view === "favorites");
+  showFavBtn.classList.toggle("bg-gray-700", view !== "favorites");
+};
+
+const setView = (newView) => {
+  view = newView;
+  localStorage.setItem("view", newView);
+  updateViewButtons();
+  applyFilters();
+};
+
+//.......
+showAllBtn.addEventListener("click", () => setView("all"));
+showFavBtn.addEventListener("click", () => setView("favorites"));
+updateViewButtons();
 init();
