@@ -1,4 +1,4 @@
-import { fetchchannel, setFavorite, setBlacklisted, deleteChannel } from "./api.js";
+import { fetchchannel, setFavorite, setBlacklisted, deleteChannel,addchannel } from "./api.js";
 import { afficher, showPreview } from "./ui.js";
 
 const loader = document.querySelector("#loader");
@@ -10,6 +10,12 @@ const searchInput = document.querySelector("#search-input");
 const categoryToggle = document.querySelector("#category-toggle");
 const categoryMenu = document.querySelector("#category-menu");
 const categoryLabel = document.querySelector("#category-label");
+
+//formulaire
+const toggleAddBtn = document.querySelector("#toggle-add");
+const addForm = document.querySelector("#add-form");
+const addError = document.querySelector("#add-error");
+//formulaire
 
 const viewButtons = {
   all: document.querySelector("#show-all"),
@@ -160,4 +166,74 @@ Object.entries(viewButtons).forEach(([name, button]) => {
 document.querySelector("#retry").addEventListener("click", init);
 
 updateViewButtons();
+
+
+
+//erreur
+const showFormError = (message) => {
+  addError.textContent = message;
+  addError.classList.remove("hidden");
+};
+
+const submitChannel = async (event) => {
+  event.preventDefault();
+
+  const channelNumber = document.querySelector("#add-number").value.trim();
+  const name = document.querySelector("#add-name").value.trim();
+  const category = document.querySelector("#add-category").value;
+  const logo = document.querySelector("#add-logo").value.trim();
+
+  if (channelNumber==='' || name==='') {
+    showFormError("Le numéro et le nom sont obligatoires.");
+    return;
+  }
+
+  if (allchannels.some((c) => c.channelNumber === channelNumber)) {
+    showFormError("Ce numéro existe déjà.");
+    return;
+  }
+
+  addError.classList.add("hidden");
+const newChannel = {
+    channelNumber,
+    name,
+    category,
+    logo,
+    isFavorite: false,
+    isBlacklisted: false,
+  };
+
+  try {
+    const created = await addchannel(newChannel);
+    allchannels.push(created);
+    addForm.reset();
+    addForm.classList.add("hidden");
+    setView("all");
+  } catch (error) {
+    showFormError(error.message);
+  }
+};
+toggleAddBtn.addEventListener("click", () => addForm.classList.toggle("hidden"));
+addForm.addEventListener("submit", submitChannel);
+
+// //regex
+
+// const NUMBER_REGEX = /^\d{3,4}$/;
+// const NAME_REGEX = /^[A-Za-zÀ-ÿ0-9 .'&+-]{2,40}$/;
+// const URL_REGEX = /^https?:\/\/\S+$/i;
+
+// if (!NUMBER_REGEX.test(channelNumber)) {
+//   showFormError("Le numéro doit contenir 3 ou 4 chiffres.");
+//   return;
+// }
+
+// if (!NAME_REGEX.test(name)) {
+//   showFormError("Le nom doit contenir entre 2 et 40 caractères valides.");
+//   return;
+// }
+
+// if (logo && !URL_REGEX.test(logo)) {
+//   showFormError("Le logo doit être un lien commençant par http:// ou https://");
+//   return;
+// }
 init();
