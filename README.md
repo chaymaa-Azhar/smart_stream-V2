@@ -161,5 +161,58 @@ npx tailwindcss -i ./css/input.css -o ./css/output.css --watch
 | `chore:` | Configuration, structure | `chore: add project structure` |
 
 
+# Smart Stream — Version 2
+
+Application web de **TV en direct (IPTV)** : un panneau latéral liste les chaînes, une zone d'affichage montre la chaîne sélectionnée et l'utilisateur peut personnaliser son expérience (favoris, liste noire, ajout et suppression de chaînes) avec persistance complète sur **MockAPI** via la **Fetch API** et mémorisation de la vue active dans `localStorage`.
+
+Projet réalisé dans le cadre du brief **Smart Stream — Version 2** (équipe **Nexora**).
+
+---
+
+## 1. Fonctionnalités (V1 + V2)
+
+| Fonctionnalité | Description | Requête / Mécanisme |
+|---|---|---|
+| Chargement des données | Récupération des chaînes depuis MockAPI avec `async/await` et `try/catch/finally` | `GET /channels` |
+| État de chargement | Affichage du message / indicateur « Chargement... » pendant la requête, masqué ensuite | UI state (`loader`) |
+| État d'erreur | Message clair (`404`, erreur serveur, problème réseau) + bouton **Réessayer** | `response.ok` & `catch` |
+| Liste & prévisualisation | Logo, numéro, nom et catégorie ; clic sur une chaîne pour afficher l'aperçu et la marquer active | DOM (`ui.js`) |
+| Recherche & catégories | Recherche instantanée par **nom** ou **numéro** combinée au filtre par catégorie (`TOUS`, `GÉNÉRALISTE`, `SPORT`, `CULTURE`, `RELIGION`, `RÉGIONAL`, `ENFANTS`, `DOCUMENTAIRE`, `MUSIQUE`) | `filter` |
+| Favoris | Étoile pleine `★` (favori) ou vide `☆` (non favori), mise à jour immédiate au clic et filtres **« Mes Favoris »** / **« Toutes »** | `PUT` / `PATCH` (`isFavorite`) |
+| Liste Noire | Bouton `🚫` pour masquer une chaîne de la liste principale, onglet **« Liste Noire »** et bouton **« Restaurer »** | `PUT` / `PATCH` (`isBlacklisted`) |
+| Suppression définitive | Suppression d'une chaîne depuis la **Liste Noire** après confirmation avec `confirm()` | `DELETE /channels/:id` |
+| Ajout d'une chaîne | Formulaire (numéro, nom, catégorie, logo par URL ou fichier image) avec validation des champs obligatoires (`numéro` et `nom`) | `POST /channels` |
+| Persistance de la vue | Mémorisation de la dernière vue sélectionnée (`Toutes` ou `Mes Favoris`) lors du rechargement de la page | `localStorage` |
+
+---
+
+## 2. Technologies
+
+- **HTML5**
+- **JavaScript ES6+** (modules ES, `async/await`, `fetch`, `FileReader`, `filter`, `find`, `some`)
+- **Tailwind CSS** (classes utilitaires compilées via Tailwind CLI)
+- **MockAPI** (API REST simulée)
+- **Git / GitHub** (branches `feature/*`, `develop`, `main`, Conventional Commits, Pull Requests, relecture de code)
+- **Vercel / GitHub Pages** (déploiement en ligne)
+
+---
+
+## 3. Structure du projet
+
+Smart Stream/
+├── index.html            # Page unique : header, sidebar, formulaire d'ajout, zone de prévisualisation
+├── README.md
+├── Data/
+│   └── data.json         # Données initiales des chaînes
+├── css/
+│   ├── input.css         # Entrée Tailwind
+│   └── output.css        # CSS généré par Tailwind CLI
+├── js/
+│   ├── main.js           # Chef d'orchestre : états, événements, filtres, localStorage, formulaire
+│   ├── api.js            # Couche services : requêtes HTTP (GET, POST, PUT/PATCH, DELETE)
+│   ├── ui.js             # Couche affichage : liste, étoiles/actions, prévisualisation, chaîne active
+│   └── update-mockapi.js # Script d'ajout des attributs isFavorite et isBlacklisted sur MockAPI
+└── src/
+    └── images/           # Images locales
 
 
