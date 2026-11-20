@@ -99,6 +99,36 @@
 
       </div>
 
+
+
+      <div class="px-3 pb-3">
+  <button id="toggle-add" class="w-full rounded bg-gray-700 px-3 py-1 text-sm">➕ Ajouter une chaîne</button>
+
+  <form id="add-form" class="hidden flex-col gap-2">
+    <input id="add-number" type="text" placeholder="Numéro (ex. 113)"
+      class="w-full p-2 rounded bg-gray-700 text-sm text-white">
+    <input id="add-name" type="text" placeholder="Nom de la chaîne"
+      class="w-full p-2 rounded bg-gray-700 text-sm text-white">
+    <select id="add-category" class="w-full p-2 rounded bg-gray-700 text-sm text-white">
+      <option value="GÉNÉRALISTE">GÉNÉRALISTE</option>
+      <option value="SPORT">SPORT</option>
+      <option value="CULTURE">CULTURE</option>
+      <option value="RELIGION">RELIGION</option>
+      <option value="RÉGIONAL">RÉGIONAL</option>
+      <option value="ENFANTS">ENFANTS</option>
+      <option value="DOCUMENTAIRE">DOCUMENTAIRE</option>
+      <option value="MUSIQUE">MUSIQUE</option>
+    </select>
+    <input id="add-logo" type="file" placeholder="Lien du logo (https://...)"
+      class="w-full p-2 rounded bg-gray-700 text-sm text-white">
+
+    <p id="add-error" class="hidden text-sm text-red-400"></p>
+
+    <button type="submit" class="w-full rounded bg-gray-500 px-3 py-1 text-sm">Enregistrer</button>
+  </form>
+
+</div>
+
     </main>
 
   </div>

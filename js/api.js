@@ -30,9 +30,19 @@ export const setFavorite = (id, value) =>
 
 
 
-//delet
+//delete
 export const setBlacklisted = (id, value) =>
   updateChannel(id, { isBlacklisted: value });
 
 export const deleteChannel = (id) =>
   request(`${API_URL}/${id}`, { method: "DELETE" });
+
+
+//post ajouter formulaire
+
+export const addchannel = (channel) =>
+  request(API_URL, {
+    method: "post",
+    headers : {"content-type": "application/json"},
+    body : JSON.stringify(channel),
+  });
